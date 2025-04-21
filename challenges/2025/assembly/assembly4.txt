@@ -1,0 +1,46 @@
+### Code:
+```asm
+0x133777000: call XxX
+0x133777005: nop
+0x133777006: xor rax, rax
+0x133777009: push rax
+0x13377700A: pop rdi
+XxX:
+0x13377700B: pop rax
+```
+
+### Explanation of Steps and Results:
+1. **`0x133777000: call XxX`**:
+   - **Action**: This transfers control to the address labeled `XxX` (`0x13377700B`), and it pushes the return address (`0x133777005`, the address of the next instruction) onto the stack.
+   - **Result**: Execution jumps to `XxX`. The stack now contains `0x133777005`.
+
+2. **`0x133777005: nop`**:
+   - **Action**: No operation is performed. This is essentially a placeholder.
+   - **Result**: The instruction is skipped with no changes to registers or memory.
+
+3. **`0x133777006: xor rax, rax`**:
+   - **Action**: Clears the `rax` register by performing a bitwise XOR operation on itself (`rax = 0`).
+   - **Result**: The `rax` register is now set to `0`.
+
+4. **`0x133777009: push rax`**:
+   - **Action**: Pushes the value of `rax` (which is `0`) onto the stack.
+   - **Result**: The stack now contains two values: `0x133777005` (return address from `call XxX`) and `0x0` (pushed value of `rax`).
+
+5. **`0x13377700A: pop rdi`**:
+   - **Action**: Pops the top value from the stack (which is `0x0`) and moves it into the `rdi` register.
+   - **Result**: `rdi` now contains `0x0`, and the stack contains only one value: `0x133777005`.
+
+6. **`XxX: 0x13377700B: pop rax`**:
+   - **Action**: Pops the top value from the stack (which is `0x133777005`) and moves it into the `rax` register.
+   - **Result**: `rax` now contains `0x133777005`, and the stack is empty.
+
+---
+
+### Final State:
+- **Registers**:
+  - `rax = 0x133777005` (return address from `call XxX`)
+  - `rdi = 0x0` (value popped from the stack)
+- **Stack**: Empty
+
+---
+
