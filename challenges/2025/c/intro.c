@@ -2,8 +2,8 @@
 #include <string.h>
 
 struct tbl_entry {
-  char src;
-  char dst;
+	char src;
+	char dst;
 } trans_tbl[] = {
     {1, 187},   {2, 155},   {3, 196},   {4, 108},   {5, 74},    {6, 46},
     {7, 34},    {8, 69},    {9, 51},    {10, 184},  {11, 213},  {12, 6},
@@ -59,27 +59,49 @@ char get_tbl_entry(char c) {
   return 0;
 }
 
+char revert_tbl_entry(char c) {
+	for (size_t i = 0; i < sizeof(trans_tbl) / sizeof(struct tbl_entry); i++) {
+		if (trans_tbl[i].dst == c) {
+			return trans_tbl[i].src;
+		}
+	}
+
+	return 0;
+}
+
 int main() {
-  char buf[128];
-  size_t len;
-  char ans[] = "\x27\xb3\x73\x9d\xf5\x7c\x99\x67\x3f\x99\x65\x3f\x99\xe7\xc2"
-               "\x82\x99\x27\x30\xc2\xce";
-  printf("Please enter the flag:\n");
-  fgets(buf, sizeof(buf), stdin);
-  buf[strlen(buf) - 1] = '\0';
-  len = strlen(buf);
-  for (size_t i = 0; i < len; i++) {
-    buf[i] = get_tbl_entry(buf[i]);
-  }
-  if (len != sizeof(ans) - 1) {
-    printf("WRONG\n");
-    return 1;
-  }
-  if (strncmp(buf, ans, sizeof(ans)) == 0) {
-    printf("CORRECT <3\n");
-    return 0;
-  }
-  printf("WRONG\n");
-  return 1;
+	char ans[] = "\x27\xb3\x73\x9d\xf5\x7c\x99\x67\x3f\x99\x65\x3f\x99\xe7\xc2\x82\x99\x27\x30\xc2\xce";
+	char buf[128];
+	char bufsol[sizeof(ans)];
+
+	int len = strlen(ans);
+
+	printf("Please enter the flag:\n");
+	fgets(buf, sizeof(buf), stdin);
+	strcpy(bufsol, ans);
+	buf[strlen(buf) - 1] = '\0';
+	bufsol[strlen(bufsol) - 1] = '\0';
+	len = strlen(buf);
+	for (size_t i = 0; i < len; i++) {
+		buf[i] = get_tbl_entry(buf[i]);
+	}
+
+	for (int i = 0; i < sizeof(bufsol); i++) {
+		bufsol[i] = revert_tbl_entry(bufsol[i]);
+	}
+
+	printf("buf: %s\nbufsol: %s\n", buf, bufsol);
+
+	if (len != sizeof(ans) - 1) {
+		printf("WRONG\n");
+		return 1;
+	}
+	if (strncmp(buf, ans, sizeof(ans)) == 0) {
+		printf("CORRECT <3\n");
+		return 0;
+	}
+
+	printf("WRONG\n");
+	return 1;
 }
 
