@@ -1,3 +1,8 @@
 site/
 .DS_Store
 .venv
+
+glibc-2.36*
+glibc_2.36-9+deb12u10.debian.tar.xz
+glibc_2.36-9+deb12u10.dsc
+glibc_2.36.orig.tar.xz
